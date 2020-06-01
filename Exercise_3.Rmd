@@ -1,0 +1,110 @@
+---
+title: "Exercise_3"
+output: html_document
+---
+
+```{r, include=FALSE}
+knitr::opts_chunk$set(fig.width = 12, fig.height = 6)
+```
+## Setting up the environment
+
+Load ggplot2
+```{r}
+library(ggplot2)
+```
+
+Examine the mtcars dataset
+```{r}
+head(mtcars)
+```
+
+## Scatterplot
+
+### Start with a simple scatterplot
+
+
+Create a scatterplot from the ```mtcars``` dataset using ```ggplot()```. Set the x variable to ```disp``` and the y variable to ```mpg```.
+
+```{r}
+
+
+
+```
+
+### Add an aesthetic mapping
+
+Map the color of the points to ```wt```.
+
+```{r}
+
+
+
+```
+
+
+### Customize the points
+
+Increase the size of the points to a value of 3. Change the color scale to a gradient from low values of ```green``` to high values of ```red```.
+
+```{r}
+
+
+
+```
+
+
+### Add another ```geom_``` layer
+
+Use ```geom_smooth()``` and the ```'lm'``` method to add a regression line to the plot.
+
+```{r, message = FALSE, warning=FALSE}
+
+
+
+```
+
+## Change the facet labels
+
+Make the facet labels more descriptive using named vectors and the ```facet_grid()``` ```labeller```.
+
+```{r, message = FALSE, warning=FALSE}
+
+# New facet label names for 'am' and 'cyl'
+
+
+
+# In the facet_grid function, after defining the grid,  use: labeller = labeller(am = am.labs, cyl = cyl.labs)
+
+
+
+```
+
+### Cleanup the plot
+
+Do the following:
+
+* 'Free' the x axis so that each set of plots by cylinder has its own scale
+* Change the theme to black & white with a base size of 14
+* Change the following titles:
+  + Plot title: "Fuel Economy (1974)" - center
+  + X axis title: "Displacement"
+  + Y axis title: "MPG"
+  + Legend title: "Weight (tons)"
+
+```{r, message = FALSE, warning=FALSE, }
+
+
+
+```
+
+
+## Final Changes
+
+Now the x axis labels overlap. Fix this by adding 8mm of spacing between panels using ```panel.spacing.x = unit(8, "mm")``` in ```theme```. Plots will resize on rendering to HTML, fixing the crowding on the x axis scale.
+
+```{r, message = FALSE, warning=FALSE}
+
+
+
+```
+

@@ -1,0 +1,63 @@
+---
+title: "Exercise_2"
+output: html_document
+---
+
+## Setting up the environment
+
+Load ggplot2, dplyr, and stringr
+```{r, message=FALSE}
+library(ggplot2)
+library(dplyr)
+library(stringr)
+```
+
+Modify the mpg dataset
+```{r}
+mpg <- mpg %>% dplyr::mutate(transmission= str_extract(trans, "[:alpha:]*(?=\\()"))
+head(mpg)
+```
+
+## Boxplot
+
+
+### Start with a simple boxplot
+
+Create a boxplot from the ```mpg``` dataset using ```ggplot()```. Set the x variable to ```class``` and the y variable to ```hwy```.
+
+```{r}
+
+
+
+```
+
+### Add an aesthetic mapping
+
+Separate the boxplots for each class by the ```transmission``` type. Hint: use the ```color``` aesthetic when changing point colors, and the ```fill`` aesthetic when changing shape colors.
+
+```{r}
+
+
+
+```
+
+### Change the plot theme
+
+Set the plot theme to black & white, and increase the base font size to 14.
+
+```{r}
+
+
+
+```
+
+### Cleanup titles
+
+Add 'Highway Fuel Economy' as the plot title. Change the x axis title to 'Vehicle Class,' and the y axis title to 'MPG - Highway.'
+
+```{r}
+
+
+
+```
+
