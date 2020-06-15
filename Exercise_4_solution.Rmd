@@ -1,0 +1,72 @@
+---
+title: "Exercise_4_solution"
+output: html_document
+---
+
+```{r, include=FALSE}
+knitr::opts_chunk$set(fig.width = 12, fig.height = 6)
+```
+
+## Setting up the environment
+
+Load packages
+```{r}
+library(ggplot2)
+library(maps)
+library(dplyr)
+```
+
+Here is the world city population data. A few italian cities have been selected from it.
+
+```{r}
+cities <- world.cities %>% filter(country.etc=="Italy") %>% 
+  filter(name %in% c("Milan", "Naples", "Bari","Rome", "Venice", "Florence", "Bologna", "Pisa"))
+cities
+```
+
+## Create a map of Italy
+
+
+Use ```geom_polygon``` to create the map
+
+```{r}
+# Here is the region subsetted
+italy <- map_data("world") %>% filter(region=="Italy")
+# make the fill color "grey", and add theme_bw
+ggplot() +
+  geom_polygon(data = italy, aes(x=long, y = lat, group = group), fill="grey") + 
+  theme_bw() + coord_map()
+
+```
+
+## Add the selected cities
+
+```{r}
+ggplot() +
+  geom_polygon(data = italy, aes(x=long, y = lat, group = group), fill="grey") +
+  geom_point(data=cities, aes(x=long, y=lat)) + theme_bw() + coord_map()
+
+```
+
+
+## Scale the cities to the population size
+```{r}
+ ggplot(cities) +
+    geom_polygon(data =italy, aes(x=long, y = lat, group = group), fill="grey") +
+    geom_point( aes(x=long, y=lat, size=pop)) +
+    theme_bw() + coord_map()
+```
+
+
+## Give the captial city a diamond shape
+
+Hint: remember to factor the capital column
+```{r}
+# Use manual shape values 16 & 18
+ggplot(cities) +
+  geom_polygon(data =italy, aes(x=long, y = lat, group = group), fill="grey") +
+  geom_point( aes(x=long, y=lat, size=pop, shape = factor(capital))) +
+  scale_shape_manual(values=c(16,18)) +
+  theme_bw() + coord_map()
+
+```

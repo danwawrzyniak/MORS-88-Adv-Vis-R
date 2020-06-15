@@ -1,0 +1,135 @@
+---
+title: "Exercise_5"
+output: html_document
+---
+# Basic Shiny apps
+
+1.  Create an app that greets the user by name and rank. You may not know all
+    the functions you need to do this yet, so some lines are included below.
+    Figure out which lines to use and copy them into the ui and server
+    components of a Shiny app, perhaps starting with the boilerplate code we
+    started with.
+
+    ```{r, eval = FALSE}
+    textInput("name", "What's your name?")
+    renderText({
+      paste0("Hello", input$rank, input$name, collapse = " ")
+    })
+    renderPlot("histogram", {
+      hist(rnorm(1000))
+    })
+    numericInput("age", "How old are you?")
+    textInput("rank", "What's your rank?")
+    textOutput("greeting")
+    tableOutput("mortgage")
+
+    ```
+
+1.  Suppose your meteorologist friend wants to design an app that lets the user
+    set a slider to a temperature in degrees Fahrenheit (`fahr`) between -40 and
+    140, and displays the corresponding temperature in Celsius. This is their
+    first attempt:
+
+    ```{r, echo = TRUE, out.width = NULL}
+    ui <- fluidPage(
+      sliderInput("fahr", label = "If the temperature in ° Fahrenheit is",
+                  min = -58, max = 122, value = 77),
+      "then the temperature in ° Celsius is ",
+      textOutput("celsius")
+    )
+
+    server <- function(input, output, session) {
+      output$celsius <- renderText({
+        (fahr - 32) * 5 / 9
+      })
+    }
+    ```
+
+    But unfortunately it has an error:
+
+    ```{r, echo = FALSE, out.width = NULL}
+    ## app <- testApp(ui, server)
+    ## app_screenshot(app, "basic-app/ex-x-times-5")
+    ```
+
+    Can you help them find and correct the error? Your chemist friend wants it
+    to also display in Kelvin (freezing is 273.15 K), can you add another output
+    for kelvin?
+
+1.  Extend the app from the previous exercise to allow the user to set another
+    slider for the relative humidity (between 0 and 100) and display the heat
+    index in degrees Fahrenheit and Celsius. The `heat_index_fahr` function is
+    included below for computing the heat index from degrees fahrenheit and
+    relative humidity. The code for the ui section is already implemented, you
+    should only need to replace the lines with comments. Try to reduce
+    duplication in the app by using a reactive expression.
+
+    ```{r, echo = TRUE, out.width = NULL}
+    ui <- fluidPage(
+      sliderInput("fahr", label = "If the temperature in ° Fahrenheit is",
+                  min = -58, max = 122, value = 77),
+      sliderInput("r", label = "and the relative humidity is",
+                  min = 0, max = 100, value = 0),
+      "then the heat index in ° Fahrenheit is ",
+      textOutput("fahr_hi_out"),
+      "and the heat index in ° Celsius is",
+      textOutput("celsius_hi")
+    )
+
+    server <- function(input, output, session) {
+      fahr_hi <- reactive({
+        ## maybe define something here to use twice below
+      })
+
+      output$fahr_hi_out <- renderText({
+        # put some code here
+      })
+
+      output$celsius_hi_out <- renderText({
+        # put some code here
+      })
+    }
+
+    heat_index_fahr <- function (t, r) {
+      ## https://en.wikipedia.org/wiki/Heat_index#Formula
+      cf <- c(
+        -8.78469475556, 1.61139411, 2.33854883889, -0.14611605,
+        -0.012308094, -0.0164248277778, 0.002211732, 0.00072546,
+        -0.000003582)
+      cf[1] +
+        (cf[2] * t) + (cf[3] * r) +
+        (cf[4] * r * t) + (cf[5] * t * t) + (cf[6] * r * r) +
+        (cf[7] * t * t * r) + (cf[8] * t * r * r) +
+        (cf[9] * t * t * r * r)
+    }
+    ```
+
+1.  The following app is very similar to one you've seen earlier in the chapter:
+    you select a dataset (this time we're using data from the **ggplot2**
+    package) and the app prints out a summary and plot of the data. It also
+    follows good practice and makes use of reactive expressions to avoid
+    redundancy of code. However there are three bugs in the code provided
+    below. Can you find and fix them?
+
+    ```{r}
+    library(ggplot2)
+    datasets <- data(package = "ggplot2")$results[, "Item"]
+
+    ui <- fluidPage(
+      selectInput("dataset", "Dataset", choices = datasets),
+      verbatimTextOutput("summary"),
+      tableOutput("plot")
+    )
+
+    server <- function(input, output, session) {
+      dataset <- reactive({
+        get(input$dataset, "package:ggplot2")
+      })
+      output$summmry <- renderPrint({
+        summary(dataset())
+      })
+      output$plot <- renderPlot({
+        plot(dataset)
+      })
+    }
+    ```

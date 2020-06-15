@@ -1,0 +1,67 @@
+---
+title: "ggplot2 Quickplot Exercises"
+output: html_document
+---
+
+## Setting up the environment
+
+Load ggplot2 and other required packages
+```{r}
+library(ggplot2)
+```
+
+Examine the ```mpg``` dataset
+
+```{r, echo=FALSE}
+head(mpg)
+```
+
+## Default Quickplots
+
+### Quick Histogram
+
+Create a histogram from the ```hwy``` column of the ```mpg``` dataset.
+
+```{r, message=FALSE}
+qplot(x=hwy, data=mpg)
+```
+
+### Quick Scatterplot
+
+Create a quick scatterplot using the ```mpg``` data. Set the x variable to ```displ``` and the y variable to ```hwy```.
+
+```{r}
+qplot(x=displ, y=hwy, data=mpg)
+```
+
+## Other Quickplot options
+
+### Quick Boxplot
+
+Create a quick boxplot with the data from ```mpg```. Set the x variable to ```class``` and the y variable to ```hwy```.
+
+```{r}
+qplot(x=class, y=hwy, data=mpg, geom="boxplot")
+```
+
+### Quick Line Plot
+
+Examine the ```economics``` dataset.
+
+```{r, echo=FALSE}
+head(economics)
+```
+
+Create a quick line plot from the ```economics``` dataset. Set the x variable to ```date``` and the y variable to ```unemploy```.
+
+```{r}
+qplot(x=date, y=unemploy, data=economics, geom="line")
+```
+
+Create an area plot using the same data as the line plot above.
+
+```{r}
+qplot(x=date, y=unemploy, data=economics, geom="area")
+```
+
+

@@ -1,0 +1,117 @@
+---
+title: "Exercise_3_solution"
+output: html_document
+---
+
+```{r, include=FALSE}
+knitr::opts_chunk$set(fig.width = 12, fig.height = 6)
+```
+## Setting up the environment
+
+Load ggplot2
+```{r}
+library(ggplot2)
+```
+
+Examine the mtcars dataset
+```{r}
+head(mtcars)
+```
+
+## Scatterplot
+
+### Start with a simple scatterplot
+
+
+Create a scatterplot from the ```mtcars``` dataset using ```ggplot()```. Set the x variable to ```disp``` and the y variable to ```mpg```.
+
+```{r}
+ggplot(mtcars, aes(x =disp, y = mpg)) + geom_point()
+```
+
+### Add an aesthetic mapping
+
+Map the color of the points to ```wt```.
+
+```{r}
+ggplot(mtcars, aes(x =disp, y = mpg)) + geom_point(aes(color=wt))
+```
+
+
+### Customize the points
+
+Increase the size of the points to a value of 3. Change the color scale to a gradient from low values of ```green``` to high values of ```red```.
+
+```{r}
+mtscatter <- ggplot(mtcars, aes(x =disp, y = mpg)) +
+                geom_point(aes(color=wt), size=3) +
+                scale_color_gradient(low = 'green', high = 'red')
+
+mtscatter
+```
+
+
+### Add another ```geom_``` layer
+
+Use ```geom_smooth()``` and the ```'lm'``` method to add a regression line to the plot.
+
+```{r, message = FALSE, warning=FALSE}
+mtscatter + geom_smooth(method = 'lm')
+```
+
+## Change the facet labels
+
+Make the facet labels more descriptive using named vectors and the ```facet_grid()``` ```labeller```.
+
+```{r, message = FALSE, warning=FALSE}
+
+# New facet label names for 'am' and 'cyl'
+am.labs <- c("Manual", "Automatic")
+names(am.labs) <- c(0, 1)
+
+cyl.labs <- c("4 cyl", "6 cyl", "8 cyl")
+names(cyl.labs) <- c(4, 6, 8)
+
+# In the facet_grid function, after defining the grid,  use: labeller = labeller(am = am.labs, cyl = cyl.labs)
+
+mtscatter + 
+  geom_smooth(method = 'lm') + 
+  facet_grid(am ~ cyl, labeller = labeller(am = am.labs, cyl = cyl.labs))
+```
+
+### Cleanup the plot
+
+Do the following:
+
+* 'Free' the x axis so that each set of plots by cylinder has its own scale
+* Change the theme to black & white with a base size of 14
+* Change the following titles:
+  + Plot title: "Fuel Economy (1974)" - center
+  + X axis title: "Displacement"
+  + Y axis title: "MPG"
+  + Legend title: "Weight (tons)"
+
+```{r, message = FALSE, warning=FALSE, }
+mtscatter +
+  geom_smooth(method = 'lm') +
+  facet_grid(am ~ cyl, labeller = labeller(am = am.labs, cyl = cyl.labs), scales = "free_x") +
+  theme_bw(14) +
+  labs(title = "Fuel Economy (1974)", x="Displacement", y = "MPG", color= "Weight (tons)") +
+  theme(plot.title = element_text(hjust=0.5))
+```
+
+
+## Final Changes
+
+Now the x axis labels overlap. Fix this by adding 8mm of spacing between panels using ```panel.spacing.x = unit(8, "mm")``` in ```theme```. Plots will resize on rendering to HTML, fixing the crowding on the x axis scale.
+
+```{r, message = FALSE, warning=FALSE}
+
+mtscatter +
+  geom_smooth(method = 'lm') +
+  facet_grid(am ~ cyl, labeller = labeller(am = am.labs, cyl = cyl.labs), scales = "free_x") +
+  theme_bw(14) +
+  labs(title = "Fuel Economy (1974)", x="Displacement", y = "MPG", color= "Weight (tons)") +
+  theme(plot.title = element_text(hjust=0.5), panel.spacing.x = unit(8, "mm")) 
+```
+
